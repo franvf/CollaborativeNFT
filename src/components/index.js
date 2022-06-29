@@ -59,6 +59,7 @@ class index extends Component {
             const contract = new web3.eth.Contract(abi, address) // Mount this contract ??
             this.setState({contract})
             console.log(this.state.contract)
+            this.collaboration()
         } else {
             console.log("There are not SC deployed on network")
         }
