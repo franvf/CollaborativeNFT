@@ -7,23 +7,11 @@ import checkOwnership from '../abis/checkOwnership.json'
 import WalletLink from 'walletlink';
 
 class index extends Component {
-    // async componentWillMount(){
-    //     // await this.loadWeb3()
-    //     await this.loadBlockchainData()
-    // }
+    async componentDidMount(){
+        await this.loadWeb3()
+    }
 
-    // async loadWeb3() {
-    //     if(window.ethereum){
-    //         window.web3 = new Web3(window.ethereum)
-    //         await window.ethereum.enable()
-    //     } else if(window.web3){
-    //         window.web3 = await window.ethereum.send('eth_requestAccounts')
-    //     } else {
-    //         window.alert("No metamask wallet available")
-    //     }
-    // }
-
-    loadweb3 = async() => {
+    loadWeb3 = async() => {
         const providerOptions = {
             binancechainwallet: {
                 package: true
@@ -40,7 +28,7 @@ class index extends Component {
                     appName: "Web3 app",
                     infuraId: "5365a7026e054eb48de548541063ef07",
                     rpc: "",
-                    chainId: 5777,
+                    chainId: 4,
                     appLogoUrl: null,
                     darkMode: true
                 }
@@ -53,6 +41,7 @@ class index extends Component {
             cacheProvider: false,
             providerOptions
         })
+
         myModal.clearCachedProvider();
         var provider = await myModal.connect()
         console.log(provider)
@@ -60,24 +49,16 @@ class index extends Component {
         await window.ethereum.send('eth_requestAccounts')
         var accounts = await web3.eth.getAccounts()
         this.setState({account: accounts[0]})
-        console.log(this.state.account)
+        window.alert("Wallet connected succesfully")
 
-    }
-
-    async loadBlockchainData(){
-        const web3 = window.web3
-
-        //Load accounts
-        // const accounts = await web3.eth.getAccounts() //Get all the accounts in our metamask
-        // this.setState({account: accounts[0]}) //Current account
-        const networkId = 5777 //Rinkeby testnet id
+        const networkId = 4 //Rinkeby testnet id
         const networkData = checkOwnership.networks[networkId] //Get information about this network
         if(networkData){
             const abi = checkOwnership.abi //Contract information
             const address = networkData.address //Contract address
             const contract = new web3.eth.Contract(abi, address) // Mount this contract ??
             this.setState({contract})
-            // this.collaboration()
+            console.log(this.state.contract)
         } else {
             console.log("There are not SC deployed on network")
         }
@@ -103,8 +84,12 @@ class index extends Component {
 
     collaboration = async() => {
         try {
-           const balance =  await this.state.contract.methods.getBalanceOf().send({from: this.state.account})
-           window.alert("Your balance is: ", balance)
+            const balance =  await this.state.contract.methods.getBalanceOf().call({from: this.state.account})
+            if(balance){
+                window.alert("You have access")
+            } else {
+                window.alert("You don't have access")
+            }
         } catch(err){
             console.log(err)
         }
@@ -116,7 +101,7 @@ class index extends Component {
                 <div className = "w-1/2 flex flex-col pb-12">
                     <form onSubmit={(event) => {
                         event.preventDefault()
-                        this.loadweb3()
+                        this.loadWeb3()
                     }}>
 
                         <input type="submit"
@@ -127,12 +112,12 @@ class index extends Component {
                 <div className = "w-1/2 flex flex-col pb-12">
                     <form onSubmit={(event) => {
                         event.preventDefault()
-                        this.connectWalletConnect()
+                        this.collaboration()
                     }}>
 
                         <input type="submit"
                             className="bbtn btn-block btn-primary btn-sm"
-                            value="Connect Wallet" />
+                            value="Check balance" />
                     </form>
                 </div>
             </div>

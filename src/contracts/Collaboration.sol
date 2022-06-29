@@ -11,7 +11,7 @@ contract checkOwnership {
         MyCollection = IERC721(collectionContract);
     }
 
-    function getBalanceOf() public view returns(uint256){
-        return MyCollection.balanceOf(msg.sender);
+    function getBalanceOf() public view returns(bool){
+        return MyCollection.balanceOf(msg.sender) > 0;
     }
 }
