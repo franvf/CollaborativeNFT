@@ -8,7 +8,7 @@ with a discount of 50% during the first week if we are owners of at least 1 NFT 
 
 To install and test this project, you must follow the next steps:
 
-1. Clone the repository in your machine: You can use the git console and simply write the command `git clone https://github.com/franvf/CollaborativeProject.git.` Alternatively, you can download and extract the project zip file on your machine.
+1. Clone the repository in your machine: You can use the git console and simply write the command `git clone https://github.com/franvf/CollaborativeNFT.git.` Alternatively, you can download and extract the project zip file on your machine.
 
 2. Install all the dependencies: In order to make our project work, we need to install all the packages and libraries our project is 
 using. To do this, we can simply open the terminal, go to the directory project and write the command `npm i`. Now all the required packages 
