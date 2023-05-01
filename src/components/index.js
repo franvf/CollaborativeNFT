@@ -1,67 +1,57 @@
 import React, { Component } from 'react';
 import Web3 from 'web3';
-import MyCollection from '../abis/MyCollection.json'; //To connect tbe backend with the frontend we have to import the .json of our contrat
-import WalletConnectProvider from '@walletconnect/web3-provider';
-import Web3Modal from "web3modal"
-import checkOwnership from '../abis/checkOwnership.json'
-import WalletLink from 'walletlink';
+import firstCollection from '../abis/FirstCollection.json'; //To connect the backend with the frontend we have to import the .json of our contrat
+import secondCollection from '../abis/SecondCollection.json'; 
+import '@metamask/legacy-web3'
 
 class index extends Component {
-    async componentDidMount(){
-        await this.loadWeb3()
+    //Run this function automatically when the page is refreshed or initialized
+    async componentDidMount(){ 
+        await this.loadMetamask()
+        await this.loadFirstContract()
+        await this.loadSecondContract()
     }
 
-    loadWeb3 = async() => {
-        const providerOptions = {
-            binancechainwallet: {
-                package: true
-            },
-            walletconnect: {
-                package: WalletConnectProvider,
-                options: {
-                    infuraId: "5365a7026e054eb48de548541063ef07"
-                }
-            },
-            walletlink: {
-                package: WalletLink,
-                otpions: {
-                    appName: "Web3 app",
-                    infuraId: "5365a7026e054eb48de548541063ef07",
-                    rpc: "",
-                    chainId: 4,
-                    appLogoUrl: null,
-                    darkMode: true
-                }
-            }
-        }
-
-        const myModal = new Web3Modal({
-            network: "rinkeby",
-            theme: "dark",
-            cacheProvider: false,
-            providerOptions
-        })
-
-        myModal.clearCachedProvider();
-        var provider = await myModal.connect()
-        console.log(provider)
-        var web3 = new Web3(provider)
-        await window.ethereum.send('eth_requestAccounts')
-        var accounts = await web3.eth.getAccounts()
-        this.setState({account: accounts[0]})
-        window.alert("Wallet connected succesfully")
-
-        const networkId = 4 //Rinkeby testnet id
-        const networkData = checkOwnership.networks[networkId] //Get information about this network
-        if(networkData){
-            const abi = checkOwnership.abi //Contract information
-            const address = networkData.address //Contract address
-            const contract = new web3.eth.Contract(abi, address) // Mount this contract ??
-            this.setState({contract})
-            console.log(this.state.contract)
-            this.collaboration()
+    async loadMetamask(){
+        if(window.ethereum){ //If metamask exist in the current browser
+            window.web3 = new Web3(window.ethereum)
+            await window.ethereum.request({method: 'eth_requestAccounts'})
+        } else if(window.web3){ //If an old version of metamask is in the current browser
+            window.web3 = Web3(window.web3.currentProvider)
         } else {
-            console.log("There are not SC deployed on network")
+            window.alert("No metamask wallet available")
+        }
+    }
+
+    async loadFirstContract(){
+        const web3 = window.web3
+        const accounts = await web3.eth.getAccounts() //Get a list of the node accounts
+        this.setState({account: accounts[0]}) //Get the first account of the list
+        const networkId = 5777 //Local blockchain id
+        const networkData = firstCollection.networks[networkId] //Search the SC in the selected network
+        if(networkData){
+            const abi = firstCollection.abi 
+            const address = networkData.address
+            const currentContract = new web3.eth.Contract(abi, address) //Create the contract object
+            this.setState({firstColContract: currentContract})
+        } else {
+            window.alert("No smart contract deployed")
+        }
+    }
+
+    async loadSecondContract(){
+        const web3 = window.web3
+        const accounts = await web3.eth.getAccounts()
+        this.setState({account: accounts[0]})
+        const networkId = 5777 //Local blockchain id
+        const networkData = secondCollection.networks[networkId]
+        if(networkData){
+            const abi = secondCollection.abi 
+            const address = networkData.address
+            const currentContract = new web3.eth.Contract(abi, address)
+            this.setState({secondColContract: currentContract})
+        } else {
+            window.alert("No smart contract deployed")
         }
     }
 
@@ -69,29 +59,27 @@ class index extends Component {
         super(props)
         this.state = {
             account: "",
-            contract: null,
-            tokenId: 0,
-            tokenURI: ""
+            firstColContract: null,
+            secondColContract: null
         }
     }
 
-    mint = async(tokenId) => {
+    mintFirst = async() => {
         try {
-            await this.state.contract.methods.mint(tokenId).send({from: this.state.account})
+            const web3 = new Web3()
+            const price = web3.utils.toWei('1', 'ether') //Convert an ether to wei
+            await this.state.firstColContract.methods.mint().send({from: this.state.account, value: price}) //Call mint function
         }catch (err){
             console.log(err)
         }
     }
 
-    collaboration = async() => {
+    mintSecond = async(nftPrice) => {
         try {
-            const balance =  await this.state.contract.methods.getBalanceOf().call({from: this.state.account})
-            if(balance){
-                window.alert("You have access")
-            } else {
-                window.alert("You don't have access")
-            }
-        } catch(err){
+            const web3 = new Web3()
+            const price = web3.utils.toWei(nftPrice, 'ether') //Convert the price into Wei
+            await this.state.secondColContract.methods.mint().send({from: this.state.account, value: price})
+        }catch (err){
             console.log(err)
         }
     }
@@ -102,23 +90,41 @@ class index extends Component {
                 <div className = "w-1/2 flex flex-col pb-12">
                     <form onSubmit={(event) => {
                         event.preventDefault()
-                        this.loadWeb3()
+                        this.loadMetamask()
                     }}>
 
                         <input type="submit"
-                            className="bbtn btn-block btn-primary btn-sm"
+                            className="ui orange button"
                             value="Connect wallet" />
                     </form>
                 </div>
+                <br />
                 <div className = "w-1/2 flex flex-col pb-12">
                     <form onSubmit={(event) => {
                         event.preventDefault()
-                        this.collaboration()
+                        this.mintFirst()
                     }}>
 
                         <input type="submit"
-                            className="bbtn btn-block btn-primary btn-sm"
-                            value="Check balance" />
+                            className="ui violet basic button"
+                            value="Mint first collection" />
+                    </form>
+                </div>
+                <br />
+                <div className = "w-1/2 flex flex-col pb-12">
+                    <form onSubmit={(event) => {
+                        event.preventDefault()
+                        const price = this.price.value
+                        this.mintSecond(price)
+                    }}>
+                        <input type="text"
+                            className="form-control mb-1"
+                            placeholder="Price"
+                            ref={(input) => this.price = input} />    
+
+                        <input type="submit"
+                            className="ui pink button"
+                            value="Mint second collection" /> 
                     </form>
                 </div>
             </div>

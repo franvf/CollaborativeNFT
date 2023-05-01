@@ -1,0 +1,16 @@
+{
+    "attributes": [
+      {
+        "trait_type": "Transform",
+        "value": "No"
+      }, 
+
+      {
+        "trait_type": "Name",
+        "value": "Black Goku"
+      }
+    ],
+    "description": "DB collection",
+    "image": "https://gateway.pinata.cloud/ipfs/QmVV2J2r3BoUyUw9tvqM3ccFNMLjiWnaEVTKHE9D5eKufn/dragon-ball-super-background-full-hd-1080p-242404.jpg",
+    "name": "DB #001"
+  }

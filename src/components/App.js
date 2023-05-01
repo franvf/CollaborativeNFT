@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
 import Index from './index';
-import URI from './NewURI';
+import Admin from './Admin';
 import Header from './Header';
-import Oracle from './oracle';
+// import Oracle from './oracle';
 
 class App extends Component {
 
@@ -15,8 +15,7 @@ class App extends Component {
           <main>
             <Routes>
               <Route exact path="/" element={<Index />}/>
-              <Route exact path="/oracle" element={<Oracle />}/>
-              <Route exact path="/NewURI" element={<URI />}/>
+              <Route exact path="/Admin" element={<Admin />}/>
             </Routes>
           </main>
         </container>

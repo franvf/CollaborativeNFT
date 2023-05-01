@@ -1,0 +1,16 @@
+{
+    "attributes": [
+      {
+        "trait_type": "Transform",
+        "value": "Yes"
+      }, 
+
+      {
+        "trait_type": "Name",
+        "value": "Vegeta SSG SS"
+      }
+    ],
+    "description": "DB collection",
+    "image": "https://gateway.pinata.cloud/ipfs/QmVV2J2r3BoUyUw9tvqM3ccFNMLjiWnaEVTKHE9D5eKufn/vegeta.jpg",
+    "name": "DB #002"
+  }
