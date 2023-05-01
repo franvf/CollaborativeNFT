@@ -16,7 +16,7 @@ will be installed.
 
 3. Install Ganache and Truffle: If you don't have this software installed yet, it is time to install it. You can download the Ganache GUI installer from [here](https://trufflesuite.com/ganache/). And to install Truffle, you can follow [this](https://trufflesuite.com/docs/truffle/how-to/install/) guide.
 
-4. Test the project: In order to check if the environment is ready, we can start the ganache GUI and then open the terminal and go to the project directory. Then we must execute the command ` Truffle migrate` to deploy the smart contracts of both collections in our local blockchain. When deployment finishes, we can return to our terminal and execute the test file. This can be done by executing the `truffle test` command in the project directory. Now the JS file in the *test* directory will be executed, and if all is correct, the test will pass.
+4. Test the project: In order to check if the environment is ready, we can start the ganache GUI and then open the terminal and go to the project directory. Then we must execute the command `truffle migrate` to deploy the smart contracts of both collections in our local blockchain. When deployment finishes, we can return to our terminal and execute the test file. This can be done by executing the `truffle test` command in the project directory. Now the JS file in the *test* directory will be executed, and if all is correct, the test will pass.
 
 5. Run the project GUI: Now that we have the SCs deployed on our local blockchain and know they run as expected, we can run the command `npm start` in our project directory. Now our default browser will be launched, our APP will be displayed, and we will be able to interact with our smart contracts using a web page.
 
